@@ -40,7 +40,7 @@ export default function Footer() {
         </Reveal>
 
         <Reveal as="p" className="footer-copy" i={3}>
-          aethrex · Bucharest · {new Date().getFullYear()}
+          dinu · Bucharest · {new Date().getFullYear()}
         </Reveal>
       </div>
     </footer>

@@ -27,7 +27,7 @@ export default function Hero() {
       <div className="hero-inner">
         <span className="hero-kicker rise" style={{ '--d': '0.1s' }}>
           <span className="hero-kicker-dot" aria-hidden />
-          aethrex · Bucharest · interdisciplinary engineer
+          dinu · Bucharest · interdisciplinary engineer
         </span>
 
         {/* the optical element: a real glass prism over the wordmark.

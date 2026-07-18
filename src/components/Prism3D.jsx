@@ -17,20 +17,22 @@ import * as THREE from 'three';
 const BG = new THREE.Color('#08080e');
 
 function Prism({ tilt }) {
-  const mesh = useRef();
+  const group = useRef();
   useFrame((_, dt) => {
-    const m = mesh.current;
-    if (!m) return;
-    m.rotation.y += dt * 0.22;
-    m.rotation.x = THREE.MathUtils.lerp(m.rotation.x, 0.18 + tilt.current.y * 0.5, 0.055);
-    m.rotation.z = THREE.MathUtils.lerp(m.rotation.z, -0.08 - tilt.current.x * 0.42, 0.055);
+    const g = group.current;
+    if (!g) return;
+    g.rotation.y += dt * 0.22;
+    g.rotation.x = THREE.MathUtils.lerp(g.rotation.x, tilt.current.y * 0.5, 0.055);
+    g.rotation.z = THREE.MathUtils.lerp(g.rotation.z, -tilt.current.x * 0.42, 0.055);
   });
   return (
     <Float speed={1.3} rotationIntensity={0.2} floatIntensity={0.55}>
-      <mesh ref={mesh} rotation={[0.18, 0.4, -0.08]}>
-        {/* 3-sided cylinder = triangular prism */}
-        <cylinderGeometry args={[1.05, 1.05, 1.45, 3, 1]} />
-        <MeshTransmissionMaterial
+      <group ref={group}>
+        {/* 3-sided cylinder = triangular prism. Axis along Z so the
+            triangular face greets the reader, point-up (thetaStart π/3). */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[1.05, 1.05, 1.45, 3, 1, false, Math.PI / 3]} />
+          <MeshTransmissionMaterial
           transmission={1}
           thickness={1.5}
           roughness={0.06}
@@ -43,7 +45,8 @@ function Prism({ tilt }) {
           resolution={384}
           background={BG}
         />
-      </mesh>
+        </mesh>
+      </group>
     </Float>
   );
 }

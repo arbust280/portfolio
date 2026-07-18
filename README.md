@@ -1,4 +1,4 @@
-# aethrex
+# dinu
 
 Personal portfolio built as one optical experiment: **the page is the prism**.
 A white beam drops from the top of the viewport and strikes a real-time 3D
