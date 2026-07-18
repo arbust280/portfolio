@@ -52,8 +52,9 @@ function smooth(pts) {
   return d;
 }
 
-function measure() {
-  const word = document.querySelector('.hero-title .refracted');
+function measure(tilt = { x: 0, y: 0 }) {
+  /* the 3D prism is the optical element when loaded; wordmark is fallback */
+  const word = document.querySelector('.hero-prism') || document.querySelector('.hero-title .refracted');
   const cta = document.querySelector('.footer-cta');
   const rects = BANDS.map((b) => {
     const el = document.querySelector(b.target);
@@ -71,11 +72,12 @@ function measure() {
   const contentRight = (vw + Math.min(vw - 32, 1080)) / 2;
   /* on mobile the lane hugs the right edge so the fan never crosses copy */
   const laneX = mobile ? vw - 13 : Math.min(vw - 44, contentRight + 84);
-  const spread = mobile ? 3.5 : 7;
+  /* dispersion widens as the prism tilts toward the pointer */
+  const spread = (mobile ? 3.5 : 7) * (1 + tilt.x * 0.45);
 
   /* the prism moment: beam in on the left face, spectrum out on the right */
-  const hit = { x: W.left + W.width * 0.05, y: W.top + W.height * 0.48 };
-  const exit = { x: W.right - W.width * 0.03, y: W.top + W.height * 0.64 };
+  const hit = { x: W.left + W.width * 0.05, y: W.top + W.height * 0.48 + tilt.y * 18 };
+  const exit = { x: W.right - W.width * 0.03, y: W.top + W.height * 0.64 + tilt.y * 34 };
   const entry = smooth([
     [hit.x - 90, 0],
     [hit.x, hit.y],
@@ -93,8 +95,9 @@ function measure() {
   const rays = BANDS.map((b, k) => {
     const lx = laneX + (k - 2) * spread;
     const cxk = cx + (k - 2) * 2.5;
+    const fan = 26 * (1 + tilt.x * 0.5) + tilt.y * 10;
     let d = `M ${exit.x.toFixed(1)},${exit.y.toFixed(1)}`;
-    d += ` C ${(exit.x + 90).toFixed(1)},${(exit.y + 20 + k * 26).toFixed(1)} ${lx.toFixed(1)},${(yBundle - 240).toFixed(1)} ${lx.toFixed(1)},${yBundle.toFixed(1)}`;
+    d += ` C ${(exit.x + 90).toFixed(1)},${(exit.y + 20 + k * fan).toFixed(1)} ${lx.toFixed(1)},${(yBundle - 240).toFixed(1)} ${lx.toFixed(1)},${yBundle.toFixed(1)}`;
     if (!mobile) {
       const t = rects[k];
       const yA = t.top - 150;
@@ -133,13 +136,29 @@ export default function LightSpine() {
 
   useEffect(() => {
     let raf = 0;
+    let tiltRaf = 0;
     let debounce = 0;
-    const run = () => setGeo(measure());
+    const tilt = { x: 0, y: 0 };
+    const run = () => setGeo(measure(tilt));
 
     const schedule = () => {
       clearTimeout(debounce);
       debounce = setTimeout(run, 160);
     };
+
+    /* dispersion follows the prism's tilt — desktop pointer only */
+    const onTilt = (e) => {
+      if (document.documentElement.clientWidth < 900) return;
+      tilt.x = e.detail.x;
+      tilt.y = e.detail.y;
+      if (!tiltRaf) {
+        tiltRaf = requestAnimationFrame(() => {
+          tiltRaf = 0;
+          run();
+        });
+      }
+    };
+    window.addEventListener('prism-tilt', onTilt);
 
     run();
     const settle = setTimeout(run, 600); // after fonts + first reveals
@@ -165,6 +184,8 @@ export default function LightSpine() {
       clearTimeout(debounce);
       clearTimeout(settle);
       if (raf) cancelAnimationFrame(raf);
+      if (tiltRaf) cancelAnimationFrame(tiltRaf);
+      window.removeEventListener('prism-tilt', onTilt);
       window.removeEventListener('resize', schedule);
       window.removeEventListener('scroll', light);
       ro.disconnect();

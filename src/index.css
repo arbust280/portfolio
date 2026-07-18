@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
-   REFRACTION STUDIES — aethrex
-   The page is the prism: a white beam strikes the wordmark, five
-   wavelengths run the page as a luminous spine — each peels off
-   behind its section's glass — and recombine at the contact CTA.
+   aethrex — the page is the prism
+   A white beam strikes a glass prism at the hero; five wavelengths
+   run the page as a luminous spine — each peels off behind its
+   section's glass — and recombine at the contact CTA.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -433,8 +433,30 @@ main {
 }
 .hero-title span { display: block; }
 
-/* the alias, seen through the prism — glassy gradient fill + animated
-   chromatic dispersion at the edges, like light split by glass */
+/* the prism mount: the 3D glass sits over the wordmark, which stays
+   as the fallback (and what you read). The prism does the dispersing. */
+.hero-prism {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.hero-prism-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(240px, 34vw, 420px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -47%);
+  z-index: 2;
+  pointer-events: none;
+  /* glass over a dark page: screen-blend so only the light survives
+     and the wordmark stays readable through the prism */
+  mix-blend-mode: screen;
+}
+body.lightside .hero-prism-canvas { mix-blend-mode: multiply; filter: invert(1); }
+.hero-prism-canvas canvas { display: block; }
+
+/* the alias — quiet glassy fill; the 3D prism carries the optics now */
 .hero-title .refracted {
   position: relative;
   background: linear-gradient(176deg, #ffffff 0%, #e4e7ff 46%, #cbb6ff 100%);
@@ -442,25 +464,7 @@ main {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  filter:
-    drop-shadow(-2px 0 0 rgba(255, 77, 77, 0.5))
-    drop-shadow(2px 0 0 rgba(77, 184, 255, 0.5))
-    drop-shadow(0 0 42px rgba(179, 107, 255, 0.32));
-  animation: aliasDisperse 7s ease-in-out infinite;
-}
-@keyframes aliasDisperse {
-  0%, 100% {
-    filter:
-      drop-shadow(-2px 0 0 rgba(255, 77, 77, 0.5))
-      drop-shadow(2px 0 0 rgba(77, 184, 255, 0.5))
-      drop-shadow(0 0 42px rgba(179, 107, 255, 0.32));
-  }
-  50% {
-    filter:
-      drop-shadow(-4px 0 0 rgba(255, 77, 77, 0.62))
-      drop-shadow(4px 0 0 rgba(77, 184, 255, 0.62))
-      drop-shadow(0 0 56px rgba(179, 107, 255, 0.46));
-  }
+  filter: drop-shadow(0 0 42px rgba(179, 107, 255, 0.3));
 }
 
 .hero-lede {
@@ -1070,12 +1074,84 @@ main {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   CURSOR LIGHT — the pointer is a light source
+   ══════════════════════════════════════════════════════════════ */
+.cursor-light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 600px;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.075), transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+@media (hover: none) {
+  .cursor-light { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   THE OTHER SIDE — triple-click the wordmark: "matter of fact,
+   it's all dark." On the light side, the light draws dark.
+   ══════════════════════════════════════════════════════════════ */
+body.lightside {
+  --void: #f3f3f7;
+  --void-lifted: #ffffff;
+  --ink: #101018;
+  --ink-dim: rgba(18, 18, 40, 0.74);
+  --ink-faint: rgba(18, 18, 40, 0.58);
+  --glass-fill: linear-gradient(160deg, rgba(12, 12, 32, 0.055), rgba(12, 12, 32, 0.012) 45%, rgba(12, 12, 32, 0.03));
+  --glass-edge: rgba(12, 12, 32, 0.14);
+  --glass-edge-lit: rgba(12, 12, 32, 0.3);
+}
+body.lightside .scene-aurora { opacity: 0.55; }
+body.lightside .scene-grid { opacity: 0.22; }
+body.lightside .scene-vignette { display: none; }
+body.lightside .shard {
+  border-color: rgba(12, 12, 32, 0.16);
+  background: linear-gradient(140deg, rgba(12, 12, 32, 0.08), rgba(12, 12, 32, 0.01) 58%, rgba(179, 107, 255, 0.08));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 30px -8px rgba(0, 0, 0, 0.15);
+}
+body.lightside .site-nav {
+  background: rgba(246, 246, 251, 0.55);
+  border-bottom-color: rgba(12, 12, 32, 0.08);
+}
+body.lightside .site-nav--scrolled { background: rgba(246, 246, 251, 0.82); }
+body.lightside .nav-sheet { background: rgba(244, 244, 250, 0.82); }
+body.lightside .hero-title .refracted {
+  background: linear-gradient(176deg, #101018 0%, #26264a 46%, #45356e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 42px rgba(179, 107, 255, 0.25));
+}
+/* on the light side, the beam is dark — it's all dark */
+body.lightside .light-spine path[stroke="#ffffff"] { stroke: #101018; }
+body.lightside .light-spine circle[fill="#ffffff"] { fill: #101018; }
+body.lightside .footer-cta { text-shadow: 0 0 38px rgba(12, 12, 32, 0.18); }
+body.lightside .skip-link { background: #101018; color: #f3f3f7; }
+body.lightside .glass {
+  box-shadow:
+    0 26px 52px -28px rgba(20, 20, 50, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(12, 12, 32, 0.08);
+}
+body.lightside .cursor-light {
+  background: radial-gradient(circle, rgba(20, 20, 60, 0.07), transparent 62%);
+  mix-blend-mode: multiply;
+}
+body.lightside .footer-quote { color: var(--ink); }
+
+/* ══════════════════════════════════════════════════════════════
    REDUCED MOTION — the experiment holds still
    ══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .scene-aurora, .scene-grid, .hero-kicker-dot,
-  .hero-title .refracted, .glass::after { animation: none; }
+  .glass::after { animation: none; }
+  .cursor-light { display: none; }
   /* the busiest moving layers step aside entirely */
   .scene-shards { display: none; }
   .btn::before { display: none; }

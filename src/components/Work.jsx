@@ -7,8 +7,10 @@ const WORK = [
     role: 'Specialised IT Intern · Bucharest',
     dates: "Jun–Jul '26",
     points: [
-      <>Shipped a <strong>Stripe payment interface and redesign</strong> for tpsoft.ro, wired to Google Apps Script so contracts and invoices auto-generate in Docs and index into Sheets.</>,
-      <>Rebuilt the main company website end to end with a <strong>Supabase</strong> backend.</>,
+      <>Shipped a <strong>Stripe payment interface and redesign demo</strong> for tpsoft.ro, wired to Google Apps Script — contracts and invoices auto-generate in Docs, database and index in Sheets.</>,
+      <>Rebuilt the main company website end to end with <strong>Supabase, Sanity Studio and Resend</strong> integration.</>,
+      <>Created an <strong>open-source JSON crawler of the Romanian Stock Market (BVB)</strong> — a free public path to local trading and company data that existing APIs charge for.</>,
+      <>Reframed dense transfer-pricing legislation (OPANAF 828) as a <strong>football-themed interactive newsletter</strong> timed to the World Cup finals — a compliance update turned shareable lead-gen tool, featured on the company&rsquo;s LinkedIn.</>,
       <>Built and deployed a team project site in <strong>Astro</strong> on Vercel.</>,
     ],
   },

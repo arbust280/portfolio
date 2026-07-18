@@ -67,7 +67,7 @@ export default function Navbar() {
       >
         <div className="nav-inner">
           <a href="#top" className="nav-logo" onClick={() => setOpen(false)}>
-            aethrex <span className="nav-logo-dim">/ Refraction</span>
+            aethrex
           </a>
           <ul className="nav-links">
             {SECTIONS.map(({ id, label, band }) => (
