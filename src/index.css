@@ -13,7 +13,7 @@
   /* Light */
   --ink: #eaeaf2;
   --ink-dim: rgba(224, 224, 238, 0.7);
-  --ink-faint: rgba(212, 212, 234, 0.48);
+  --ink-faint: rgba(214, 214, 236, 0.62);
 
   /* Spectrum — dispersion order, red bends least */
   --l700: #ff5c4d; /* work        */
@@ -72,6 +72,28 @@ button { font-family: inherit; }
   outline: 2px solid var(--band, #fff);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* keyboard users jump straight past the nav */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #050507;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: translateY(-64px);
+  transition: transform 0.25s var(--ease-out);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline-color: #fff;
 }
 
 /* Film grain — vinyl sleeve texture, nearly subliminal */

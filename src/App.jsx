@@ -1,3 +1,4 @@
+import { MotionConfig } from 'framer-motion';
 import './index.css';
 import Background from './components/Background';
 import LightSpine from './components/LightSpine';
@@ -12,7 +13,8 @@ import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <>
+    <MotionConfig reducedMotion="user">
+      <a className="skip-link" href="#work">Skip to content</a>
       <Background />
       <LightSpine />
       <Navbar />
@@ -25,6 +27,6 @@ export default function App() {
         <Manifesto />
       </main>
       <Footer />
-    </>
+    </MotionConfig>
   );
 }

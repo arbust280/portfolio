@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll } from 'framer-motion';
 
 const MotionNav = motion.nav;
@@ -17,6 +17,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollYProgress } = useScroll();
+  const burgerRef = useRef(null);
+  const sheetRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,6 +40,20 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      sheetRef.current?.querySelector('a')?.focus();
+      const onKey = (e) => {
+        if (e.key === 'Escape') {
+          setOpen(false);
+          burgerRef.current?.focus();
+        }
+      };
+      window.addEventListener('keydown', onKey);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', onKey);
+      };
+    }
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
@@ -67,6 +83,7 @@ export default function Navbar() {
             ))}
           </ul>
           <button
+            ref={burgerRef}
             className={`nav-burger${open ? ' nav-burger--open' : ''}`}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
@@ -78,7 +95,7 @@ export default function Navbar() {
       </MotionNav>
 
       {open && (
-        <div className="nav-sheet" role="dialog" aria-label="Site navigation">
+        <div className="nav-sheet" role="dialog" aria-modal="true" aria-label="Site navigation" ref={sheetRef}>
           <ul>
             {SECTIONS.map(({ id, label, band }) => (
               <li key={id}>
