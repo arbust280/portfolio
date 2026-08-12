@@ -1,9 +1,23 @@
 /* ═══════════════════════════════════════════════════════════════
    aethrex — the page is the prism
-   A white beam strikes a glass prism at the hero; five wavelengths
-   run the page as a luminous spine — each peels off behind its
-   section's glass — and recombine at the contact CTA.
+
+   A white beam strikes a glass prism at the hero; five wavelengths run
+   the page as a luminous spine, each peeling off behind its section's
+   glass, and recombine at the contact CTA.
+
+   Two rules govern everything below:
+     · Light is scarce. The room is nearly black so the spectrum can be
+       the brightest thing on screen.
+     · Glass is scarce. Three surfaces are real glass. Everything else
+       is type on void, which is cheaper AND makes the glass read.
    ═══════════════════════════════════════════════════════════════ */
+
+/* Weight axis only. The wdth axis is lovely but costs 88 KB vs 34 KB for
+   the same latin subset (and again for latin-ext, which "Băneasa"
+   forces) — 2.6x the file for a width difference that reads as marginal
+   at display size. Weight, tracking and scale carry the poster instead. */
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
 
 :root {
   /* Vacuum */
@@ -11,70 +25,86 @@
   --void-lifted: #0a0a10;
 
   /* Light */
-  --ink: #eaeaf2;
-  --ink-dim: rgba(224, 224, 238, 0.7);
-  --ink-faint: rgba(214, 214, 236, 0.62);
+  --ink: #edeef5;
+  --ink-dim: rgba(226, 227, 240, 0.72);
+  --ink-faint: rgba(206, 208, 230, 0.5);
 
   /* Spectrum — dispersion order, red bends least */
-  --l700: #ff5c4d; /* work        */
-  --l590: #ffb84d; /* projects    */
-  --l530: #5cff8f; /* leadership  */
-  --l470: #5c8aff; /* education   */
-  --l410: #b36bff; /* awards      */
-
-  /* Glass optics */
-  --glass-fill: linear-gradient(160deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012) 45%, rgba(255, 255, 255, 0.03));
-  --glass-edge: rgba(255, 255, 255, 0.09);
-  --glass-edge-lit: rgba(255, 255, 255, 0.22);
-  --glass-blur: 22px;
+  --l700: #ff5c4d;   /* work        */
+  --l590: #ffb84d;   /* projects    */
+  --l530: #5cff8f;   /* leadership  */
+  --l470: #5c8aff;   /* education   */
+  --l410: #b36bff;   /* awards      */
+  --lwhite: #e8e8f2; /* recombined  */
 
   /* Current band — each section overrides */
-  --band: #ffffff;
+  --band: var(--lwhite);
 
   /* Type */
-  --font-display: 'Archivo', 'Arial Black', sans-serif;
-  --font-body: 'Instrument Sans', 'Segoe UI', sans-serif;
-  --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Consolas', monospace;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0:  clamp(1rem, 0.97rem + 0.16vw, 1.11rem);
+  --step-1:  clamp(1.2rem, 1.12rem + 0.4vw, 1.5rem);
+  --step-2:  clamp(1.45rem, 1.28rem + 0.85vw, 2.1rem);
+  --step-3:  clamp(1.9rem, 1.5rem + 2vw, 3.2rem);
+  --step-4:  clamp(2.4rem, 1.6rem + 4vw, 4.6rem);
 
   /* Geometry */
-  --radius: 20px;
+  --radius: 22px;
   --radius-sm: 12px;
-  --max: 1080px;
+  --max: 1120px;
+  --gutter: clamp(20px, 5vw, 56px);
+  --section-gap: clamp(96px, 15vh, 190px);
+
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --glass-blur: 20px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; padding: 0; }
 
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--void);
   color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 16.5px;
-  line-height: 1.65;
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.62;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis-weight: none;
 }
 
-::selection { background: rgba(179, 107, 255, 0.35); color: #fff; }
+::selection { background: rgba(179, 107, 255, 0.36); color: #fff; }
 
 a { color: inherit; text-decoration: none; }
-ul { list-style: none; }
-button { font-family: inherit; }
+ul, ol { list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+img, svg { display: block; max-width: 100%; }
+strong { font-weight: 620; color: var(--ink); }
 
 :focus-visible {
-  outline: 2px solid var(--band, #fff);
+  outline: 2px solid var(--band);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* keyboard users jump straight past the nav */
+/* content rides above the light engine */
+main, .site-footer, .site-nav { position: relative; z-index: 2; }
+
 .skip-link {
   position: fixed;
   top: 10px;
@@ -83,18 +113,15 @@ button { font-family: inherit; }
   padding: 10px 18px;
   border-radius: 999px;
   background: #fff;
-  color: #050507;
+  color: var(--void);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transform: translateY(-64px);
+  transform: translateY(-72px);
   transition: transform 0.25s var(--ease-out);
 }
-.skip-link:focus-visible {
-  transform: translateY(0);
-  outline-color: #fff;
-}
+.skip-link:focus-visible { transform: translateY(0); outline-color: #fff; }
 
 /* Film grain — vinyl sleeve texture, nearly subliminal */
 body::after {
@@ -102,14 +129,13 @@ body::after {
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.015;
+  opacity: 0.016;
   pointer-events: none;
   z-index: 60;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SCENE — layered liquid-glass background
-   aurora blobs · noise-warped caustics · light-grid floor · shards
+   SCENE — the room the light travels through
    ══════════════════════════════════════════════════════════════ */
 .scene {
   position: fixed;
@@ -120,72 +146,50 @@ body::after {
 }
 .scene > * { position: absolute; inset: 0; }
 
-/* drifting prismatic aurora */
-.scene-aurora {
+/* one cold ambient wash — no blur filter, the gradient is already soft */
+.scene-ambient {
   background:
-    radial-gradient(46% 40% at 78% 8%, rgba(179, 107, 255, 0.18), transparent 70%),
-    radial-gradient(42% 38% at 12% 86%, rgba(77, 184, 255, 0.14), transparent 72%),
-    radial-gradient(38% 34% at 92% 82%, rgba(92, 255, 157, 0.08), transparent 70%),
-    radial-gradient(32% 30% at 28% 18%, rgba(255, 77, 109, 0.07), transparent 70%);
-  filter: blur(34px);
-  animation: auroraDrift 32s ease-in-out infinite alternate;
-}
-@keyframes auroraDrift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.82; }
-  50%  { transform: translate3d(2.4%, -3%, 0) scale(1.07); opacity: 1; }
-  100% { transform: translate3d(-2.4%, 2.2%, 0) scale(1.03); opacity: 0.86; }
+    radial-gradient(58% 44% at 74% 4%, rgba(120, 96, 200, 0.16), transparent 68%),
+    radial-gradient(50% 40% at 14% 92%, rgba(60, 110, 190, 0.11), transparent 70%);
 }
 
-/* perspective light-grid floor receding into the dark */
+/* optical-bench floor, receding */
 .scene-grid {
   top: auto;
-  bottom: -12%;
-  height: 72%;
+  bottom: 0;
+  height: 46vh;
   background-image:
-    linear-gradient(rgba(179, 107, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 150, 255, 0.12) 1px, transparent 1px);
-  background-size: 64px 64px;
-  transform: perspective(620px) rotateX(72deg);
+    linear-gradient(rgba(150, 170, 255, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150, 170, 255, 0.075) 1px, transparent 1px);
+  background-size: 68px 68px;
+  transform: perspective(340px) rotateX(66deg);
   transform-origin: bottom center;
-  mask-image: linear-gradient(to top, black, transparent 76%);
-  -webkit-mask-image: linear-gradient(to top, black, transparent 76%);
-  opacity: 0.45;
-  animation: gridScroll 20s linear infinite;
+  mask-image: linear-gradient(transparent, #000 55%, transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 55%, transparent);
+  opacity: 0.75;
 }
-@keyframes gridScroll { to { background-position: 0 64px, 64px 0; } }
 
-/* rising glass shards — real backdrop refraction */
-.shard {
+/* dust — you only see a beam because something is in the air */
+.mote {
   position: absolute;
-  bottom: -14%;
-  border-radius: 7px;
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.02) 58%, rgba(179, 107, 255, 0.1));
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 8px 30px -8px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px) saturate(140%);
-  -webkit-backdrop-filter: blur(3px) saturate(140%);
-  animation-name: shardRise;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  bottom: -12px;
+  border-radius: 50%;
+  background: rgba(226, 230, 255, 0.85);
+  box-shadow: 0 0 8px rgba(190, 200, 255, 0.6);
+  animation: moteRise linear infinite;
 }
-@keyframes shardRise {
-  0%   { transform: translateY(0) rotate(var(--rot)); opacity: 0; }
-  8%   { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateY(-122vh) rotate(calc(var(--rot) + 44deg)); opacity: 0; }
+@keyframes moteRise {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(24px, -104vh, 0); }
 }
 
-/* vignette seats the content against the scene */
 .scene-vignette {
-  background:
-    radial-gradient(120% 82% at 50% -4%, transparent 54%, rgba(0, 0, 0, 0.5) 100%),
-    radial-gradient(100% 62% at 50% 112%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+  background: radial-gradient(120% 90% at 50% 30%, transparent 42%, rgba(0, 0, 0, 0.72) 100%);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   LIGHT SPINE — the full-page beam. Sits between the scene (z 0)
-   and the content (z 2), so glass panels blur the rays behind them.
-   Revealed progressively: --lit is how far the light has travelled.
+   LIGHT SPINE — beam, dispersed rays, recombination
+   Sits under the content so .glass panels refract it.
    ══════════════════════════════════════════════════════════════ */
 .light-spine {
   position: absolute;
@@ -194,861 +198,758 @@ body::after {
   width: 100%;
   z-index: 1;
   pointer-events: none;
-  mask-image: linear-gradient(
-    to bottom,
-    #000 calc(var(--lit, 100vh) - 280px),
-    transparent var(--lit, 100vh)
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 calc(var(--lit, 100vh) - 280px),
-    transparent var(--lit, 100vh)
-  );
+  mix-blend-mode: screen;
 }
 .light-spine svg { display: block; }
+.light-spine path { fill: none; stroke-linecap: round; stroke: var(--band, #fff); }
 
-main {
-  position: relative;
-  z-index: 2;
+/* three passes make a bloom without an SVG filter, which on a
+   document-height surface would be ruinous */
+.ray-bloom { stroke-width: 17; opacity: 0.07; }
+.ray-halo  { stroke-width: 6;  opacity: 0.16; }
+.ray-core  { stroke-width: 1.6; opacity: 0.88; }
+.ray-inner { stroke-width: 1.3; opacity: 0.45; stroke: #fff; }
+
+.spine-entry path:not(.ray-inner) { stroke: #fff; }
+.spine-entry { animation: beamArrive 1.4s var(--ease-out) both; }
+@keyframes beamArrive {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
-.site-footer { position: relative; z-index: 2; }
+
+/* pointer tilt is a compositor transform — never a re-measure */
+.spine-rays { transform: translateX(calc(var(--tilt-x, 0) * 8px)); }
+
+/* each ray idles dim and ignites when its own section arrives */
+.spine-ray,
+.spine-tail {
+  opacity: calc(0.3 + 0.7 * var(--lit, 0));
+  transition: opacity 0.9s var(--ease-out);
+}
+.ray-glint      { fill: var(--band, #fff); }
+.ray-glint-halo { fill: var(--band, #fff); opacity: calc(0.06 + 0.12 * var(--lit, 0)); }
+.spine-tail .ray-glint, .spine-tail .ray-glint-halo { fill: #fff; }
+.spine-tail path { stroke: #fff; }
 
 /* ══════════════════════════════════════════════════════════════
-   NAV — a strip of glass; progress bar is the spectrum itself
+   NAV
    ══════════════════════════════════════════════════════════════ */
 .site-nav {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
-  height: 58px;
-  display: flex;
-  align-items: center;
-  padding: 0 clamp(16px, 4vw, 32px);
-  background: rgba(8, 8, 12, 0.42);
-  backdrop-filter: blur(26px) saturate(170%);
-  -webkit-backdrop-filter: blur(26px) saturate(170%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.35s ease;
+  transition: background 0.4s var(--ease-out), backdrop-filter 0.4s var(--ease-out),
+              border-color 0.4s var(--ease-out);
+  border-bottom: 1px solid transparent;
+  animation: navDrop 0.8s var(--ease-out) both;
 }
-.site-nav--scrolled { background: rgba(8, 8, 12, 0.66); }
+@keyframes navDrop {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: none; }
+}
 
-/* specular top edge */
-.site-nav::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 8%; right: 8%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+/* glass surface #1 of 3 — and only once you've scrolled */
+.site-nav--scrolled {
+  background: rgba(8, 8, 14, 0.55);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border-bottom-color: rgba(255, 255, 255, 0.07);
 }
 
 .nav-inner {
   max-width: var(--max);
-  width: 100%;
   margin: 0 auto;
+  padding: 16px var(--gutter);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .nav-logo {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  font-weight: 640;
-  font-size: 0.98rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
 }
-.nav-logo .nav-logo-dim { color: var(--ink-faint); font-weight: 400; }
 
-.nav-links {
-  display: flex;
-  gap: clamp(14px, 2.4vw, 28px);
-}
+.nav-links { display: flex; gap: 4px; }
 .nav-link {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  padding: 6px 2px;
   position: relative;
+  display: block;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 0.87rem;
+  color: var(--ink-dim);
   transition: color 0.25s ease;
 }
-.nav-link::after {
+.nav-link::before {
   content: '';
   position: absolute;
-  left: 0; right: 100%;
-  bottom: 0;
-  height: 1.5px;
-  background: var(--band-link, #fff);
-  transition: right 0.35s var(--ease-out);
-  border-radius: 1px;
+  left: 13px;
+  right: 13px;
+  bottom: 3px;
+  height: 1px;
+  background: var(--band);
+  transform: scaleX(0);
+  transition: transform 0.35s var(--ease-out);
 }
-.nav-link:hover, .nav-link--active { color: var(--ink); }
-.nav-link:hover::after, .nav-link--active::after { right: 0; }
+.nav-link:hover { color: var(--ink); }
+.nav-link:hover::before { transform: scaleX(1); }
+.nav-link--active { color: var(--ink); }
+.nav-link--active::before { transform: scaleX(1); box-shadow: 0 0 10px var(--band); }
 
-/* burger — glass toggle, mobile only */
-.nav-burger {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 40px;
-  height: 40px;
-  padding: 0 9px;
-  border-radius: 10px;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass-fill);
-  cursor: pointer;
-}
+.nav-burger { display: none; flex-direction: column; gap: 5px; padding: 8px; }
 .nav-burger span {
+  display: block;
+  width: 22px;
   height: 1.5px;
-  width: 100%;
   background: var(--ink);
-  border-radius: 1px;
-  transition: transform 0.3s var(--ease-out), opacity 0.25s ease;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s;
 }
 .nav-burger--open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .nav-burger--open span:nth-child(2) { opacity: 0; }
 .nav-burger--open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* full-screen glass menu */
 .nav-sheet {
   position: fixed;
-  inset: 58px 0 0 0;
+  inset: 0;
   z-index: 49;
-  background: rgba(6, 6, 11, 0.72);
-  backdrop-filter: blur(30px) saturate(160%);
-  -webkit-backdrop-filter: blur(30px) saturate(160%);
-  padding: 10vh clamp(24px, 8vw, 48px);
-  overflow-y: auto;
+  background: rgba(5, 5, 8, 0.93);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  display: grid;
+  place-items: center;
+  animation: sheetIn 0.35s var(--ease-out);
 }
-.nav-sheet ul { display: grid; gap: 6px; }
+@keyframes sheetIn { from { opacity: 0; } to { opacity: 1; } }
+.nav-sheet ul { display: grid; gap: 4px; text-align: left; }
 .nav-sheet a {
   display: flex;
   align-items: center;
   gap: 16px;
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 120;
-  font-weight: 640;
-  font-size: clamp(1.6rem, 7vw, 2.2rem);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 12px 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 14px 20px;
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .nav-sheet-dot {
-  width: 8px; height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: var(--band-link, #fff);
-  box-shadow: 0 0 12px var(--band-link, #fff);
-  flex: none;
+  background: var(--band);
+  box-shadow: 0 0 14px var(--band);
 }
 
-/* spectrum scroll progress */
 .scroll-progress {
   position: fixed;
-  top: 0; left: 0;
-  z-index: 51;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 2px;
-  width: 100%;
-  transform-origin: left;
-  background: linear-gradient(90deg, #fff 0%, var(--l700) 18%, var(--l590) 36%, var(--l530) 54%, var(--l470) 72%, var(--l410) 90%, #fff 100%);
+  z-index: 51;
+  background: linear-gradient(90deg, var(--l700), var(--l590), var(--l530), var(--l470), var(--l410));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
 }
+.scroll-progress--native {
+  animation: progressGrow linear both;
+  animation-timeline: scroll(root block);
+}
+@keyframes progressGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* ══════════════════════════════════════════════════════════════
-   HERO — the experiment begins: white light meets the prism
+   HERO — the poster
    ══════════════════════════════════════════════════════════════ */
 .hero {
+  position: relative;
   min-height: 100svh;
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding: 120px clamp(16px, 4vw, 32px) 88px;
-}
-
-.hero-inner {
-  max-width: var(--max);
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  place-items: center;
+  padding: 104px var(--gutter) 84px;
   text-align: center;
-  position: relative;
-  z-index: 2;
+}
+.hero-inner {
+  width: 100%;
+  max-width: 940px;
+  display: grid;
+  justify-items: center;
 }
 
-/* CSS load sequence — deterministic, JS-independent entrance */
-.rise {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: rise 0.7s var(--ease-out) forwards;
-  animation-delay: var(--d, 0s);
-}
+.hero > *, .hero-inner > * { animation: rise 0.9s var(--ease-out) both; }
+.hero-kicker  { animation-delay: 0.15s; }
+.hero-prism   { animation-delay: 0.05s; }
+.hero-title   { animation-delay: 0.3s; }
+.hero-lede    { animation-delay: 0.46s; }
+.hero-actions { animation-delay: 0.58s; }
+.hero-scroll  { animation-delay: 0.9s; }
+
 @keyframes rise {
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: none; }
 }
 
+/* block, not flex: as a flex sibling the dot is pushed to the far left
+   the moment the label wraps to two lines */
 .hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  display: block;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  font-size: var(--step--1);
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 24px;
-  padding: 8px 16px;
-  border: 1px solid var(--glass-edge);
-  border-radius: 999px;
-  background: var(--glass-fill);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: var(--ink-faint);
 }
 .hero-kicker-dot {
-  width: 6px; height: 6px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 10px 0 0;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
-  animation: beaconPulse 2.6s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+  animation: beacon 2.8s ease-in-out infinite;
 }
-@keyframes beaconPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+@keyframes beacon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.8); }
+}
+
+/* the optical element */
+.hero-prism {
+  width: min(48vw, 27vh, 280px);
+  aspect-ratio: 1;
+  margin: clamp(10px, 2vh, 24px) 0 clamp(2px, 0.6vh, 10px);
+  position: relative;
+}
+.prism-gl, .prism-gl canvas { width: 100%; height: 100%; display: block; }
+
+/* fallback prism — no WebGL, still an optical object */
+.prism-css {
+  display: block;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(50% 4%, 96% 92%, 4% 92%);
+  background:
+    linear-gradient(118deg,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.08) 32%,
+      rgba(179, 107, 255, 0.42) 56%,
+      rgba(92, 138, 255, 0.34) 70%,
+      rgba(92, 255, 143, 0.22) 82%,
+      rgba(255, 184, 77, 0.28) 92%,
+      rgba(255, 92, 77, 0.34) 100%);
+  filter: drop-shadow(0 0 46px rgba(150, 120, 255, 0.4));
+  animation: prismBreathe 9s ease-in-out infinite alternate;
+}
+@keyframes prismBreathe {
+  from { transform: rotate(-3deg) scale(0.98); }
+  to   { transform: rotate(3deg) scale(1.02); }
 }
 
 .hero-title {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 118;
-  font-weight: 780;
-  font-size: clamp(4rem, 14vw, 10.5rem);
-  line-height: 0.94;
-  letter-spacing: -0.03em;
-  margin-bottom: 30px;
-}
-.hero-title span { display: block; }
-
-/* the prism mount: the 3D glass sits over the wordmark, which stays
-   as the fallback (and what you read). The prism does the dispersing. */
-.hero-prism {
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-.hero-prism-canvas {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: clamp(240px, 34vw, 420px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -47%);
-  z-index: 2;
-  pointer-events: none;
-  /* glass over a dark page: screen-blend so only the light survives
-     and the wordmark stays readable through the prism */
-  mix-blend-mode: screen;
-}
-body.lightside .hero-prism-canvas { mix-blend-mode: multiply; filter: invert(1); }
-.hero-prism-canvas canvas { display: block; }
-
-/* the alias — quiet glassy fill; the 3D prism carries the optics now */
-.hero-title .refracted {
-  position: relative;
-  background: linear-gradient(176deg, #ffffff 0%, #e4e7ff 46%, #cbb6ff 100%);
+  font-size: clamp(3.4rem, 15vw, 10.5rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  background: linear-gradient(178deg, #ffffff 20%, #b9bcd6 62%, #6f7396 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: transparent;
   color: transparent;
-  filter: drop-shadow(0 0 42px rgba(179, 107, 255, 0.3));
+  filter: drop-shadow(0 0 46px rgba(179, 107, 255, 0.26));
 }
 
 .hero-lede {
-  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  max-width: 60ch;
+  margin-top: clamp(22px, 3.5vh, 34px);
+  font-size: var(--step-1);
+  line-height: 1.5;
   color: var(--ink-dim);
-  max-width: 52ch;
-  margin-bottom: 36px;
-  line-height: 1.75;
   text-wrap: pretty;
 }
-.hero-lede strong { color: var(--ink); font-weight: 600; }
 
 .hero-actions {
   display: flex;
-  gap: 14px;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 12px;
+  margin-top: clamp(26px, 4vh, 40px);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   BUTTONS — pressed slabs of glass
-   ══════════════════════════════════════════════════════════════ */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 13px 26px;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass-fill);
-  color: var(--ink);
-  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-  box-shadow:
-    0 12px 28px -14px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-  transition: transform 0.35s var(--ease-out), border-color 0.3s ease, box-shadow 0.35s var(--ease-out);
-}
-
-/* travelling shine — light crossing the glass */
-.btn::before {
-  content: '';
+.hero-scroll {
   position: absolute;
-  top: 0; left: -130%;
-  width: 55%; height: 100%;
-  background: linear-gradient(100deg, transparent 15%, rgba(255, 255, 255, 0.22) 50%, transparent 85%);
-  transition: left 0.65s var(--ease-out);
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  transition: opacity 0.4s ease;
 }
-.btn:hover::before { left: 130%; }
-
-.btn:hover {
-  transform: translateY(-2px);
-  border-color: var(--glass-edge-lit);
-  box-shadow:
-    0 18px 36px -14px rgba(0, 0, 0, 0.8),
-    0 0 28px -6px color-mix(in srgb, var(--band) 30%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+/* `backwards`, not `both`: a filled animation outranks normal declarations,
+   so `both` would pin opacity at 1 and defeat the fade-out below. */
+.hero-scroll { animation-fill-mode: backwards; }
+.is-scrolled .hero-scroll { opacity: 0; }
+.hero-scroll-rule {
+  width: 1px;
+  height: 42px;
+  background: linear-gradient(#fff, transparent);
+  animation: scrollPulse 2.4s ease-in-out infinite;
 }
-.btn:active { transform: translateY(0) scale(0.98); }
-
-.btn--beam {
-  border-color: rgba(255, 255, 255, 0.28);
-  background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05) 55%, rgba(255, 255, 255, 0.1));
-  box-shadow:
-    0 12px 32px -12px rgba(255, 255, 255, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.25; transform: scaleY(0.7); transform-origin: top; }
+  50%      { opacity: 0.9; transform: scaleY(1); transform-origin: top; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SECTIONS — wavelength bands
+   BANDS — one section per wavelength
    ══════════════════════════════════════════════════════════════ */
 .band {
-  padding: clamp(72px, 10vh, 120px) clamp(16px, 4vw, 32px);
   max-width: var(--max);
   margin: 0 auto;
-  position: relative;
+  padding: 0 var(--gutter) var(--section-gap);
+  scroll-margin-top: 90px;
 }
 
-/* wavelength eyebrow: λ value + name + rule in the band color */
 .band-label {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: clamp(28px, 4vh, 44px);
+  align-items: baseline;
+  gap: clamp(14px, 2.5vw, 26px);
+  margin-bottom: 14px;
 }
+.band-label--sub { margin-top: var(--section-gap); }
+
 .band-lambda {
+  flex: none;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
   color: var(--band);
-  text-shadow: 0 0 14px color-mix(in srgb, var(--band) 55%, transparent);
-  white-space: nowrap;
+  text-shadow: 0 0 18px var(--band);
 }
 .band-name {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  font-weight: 620;
-  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+  flex: none;
+  font-size: var(--step-3);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1;
 }
 .band-rule {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--band) 45%, transparent), transparent);
+  min-width: 20px;
+  background: linear-gradient(90deg, var(--band), transparent);
+  opacity: 0.55;
 }
 
 .band-intro {
-  color: var(--ink-dim);
   max-width: 58ch;
-  margin: -14px 0 36px;
-  font-size: 0.98rem;
+  margin-bottom: clamp(38px, 6vh, 66px);
+  font-size: var(--step-1);
+  color: var(--ink-dim);
+  text-wrap: pretty;
+}
+
+/* Reveal — the class is written by one shared IntersectionObserver.
+   Scoped to .reveal-ready (set by main.jsx only when IO exists) so the
+   hidden state can never strand content that nothing will un-hide. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.reveal-ready [data-reveal].is-revealed { opacity: 1; transform: none; }
+
+/* ══════════════════════════════════════════════════════════════
+   WORK — editorial, cardless
+   ══════════════════════════════════════════════════════════════ */
+.work-list { display: grid; }
+.work-entry {
+  padding: clamp(30px, 5vh, 48px) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.work-entry:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.09); }
+
+.work-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.work-org {
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.12;
+}
+.work-dates {
+  flex: none;
+  /* keeps the date hanging right even when the heading forces it to wrap */
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--band);
+  letter-spacing: 0.04em;
+}
+.work-role {
+  margin-top: 6px;
+  font-size: var(--step-0);
+  color: var(--ink-faint);
+}
+.work-points {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+  max-width: 68ch;
+}
+.work-points li {
+  position: relative;
+  padding-left: 26px;
+  color: var(--ink-dim);
+  text-wrap: pretty;
+}
+.work-points li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.66em;
+  width: 7px;
+  height: 1px;
+  background: var(--band);
+  box-shadow: 0 0 8px var(--band);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   GLASS PANEL — the core material. Specular highlight tracks the
-   cursor via --mx/--my; edges carry a faint chromatic fringe.
+   PROJECTS — glass surface #2 of 3, where a panel IS the object
    ══════════════════════════════════════════════════════════════ */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(16px, 2.2vw, 24px);
+}
+
 .glass {
   position: relative;
   isolation: isolate;
   border-radius: var(--radius);
-  border: 1px solid var(--glass-edge);
-  /* frosted-glass grain sits on top of the fill */
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='0.3'/%3E%3C/svg%3E"),
-    var(--glass-fill);
-  background-size: 120px 120px, auto;
-  background-blend-mode: overlay, normal;
-  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    linear-gradient(158deg,
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.018) 44%,
+      rgba(255, 255, 255, 0.042));
+  backdrop-filter: blur(var(--glass-blur)) saturate(155%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(155%);
   box-shadow:
-    0 26px 52px -28px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    inset 1.5px 0 0 rgba(255, 92, 77, 0.06),
-    inset -1.5px 0 0 rgba(92, 138, 255, 0.07);
-  transition: transform 0.45s var(--ease-out), border-color 0.35s ease, box-shadow 0.45s var(--ease-out);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -20px 40px -34px rgba(0, 0, 0, 0.9),
+    0 26px 64px -30px rgba(0, 0, 0, 0.95);
+  transition: transform 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out);
 }
 
-/* cursor-tracked specular glare */
+/* the lit edge — a real gradient hairline, masked to the border box */
 .glass::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(
-    340px circle at var(--mx, 50%) var(--my, -20%),
-    rgba(255, 255, 255, 0.09),
-    transparent 65%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  padding: 1px;
+  background: linear-gradient(152deg,
+    rgba(255, 255, 255, 0.52),
+    rgba(255, 255, 255, 0.07) 34%,
+    transparent 58%,
+    color-mix(in srgb, var(--band) 55%, transparent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
   pointer-events: none;
   z-index: 1;
 }
-.glass:hover::before { opacity: 1; }
 
-/* liquid sheen — a slow band of light travelling across the glass */
+/* specular highlight tracking the pointer */
 .glass::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  z-index: 1;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(255, 255, 255, 0.11), transparent 68%);
+  opacity: var(--lit, 0);
+  transition: opacity 0.45s var(--ease-out);
   pointer-events: none;
-  background: linear-gradient(
-    115deg,
-    transparent 32%,
-    rgba(255, 255, 255, 0.08) 46%,
-    rgba(255, 255, 255, 0.16) 50%,
-    rgba(255, 255, 255, 0.08) 54%,
-    transparent 68%
-  );
-  background-size: 260% 100%;
-  background-position: 175% 0;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-  animation: glassSheen 11s ease-in-out infinite;
-}
-@keyframes glassSheen {
-  0%       { background-position: 175% 0; }
-  55%, 100% { background-position: -75% 0; }
-}
-.glass:hover::after { animation-duration: 3.5s; opacity: 0.75; }
-
-.glass:hover {
-  transform: translateY(-4px);
-  border-color: var(--glass-edge-lit);
-  box-shadow:
-    0 34px 64px -28px rgba(0, 0, 0, 0.85),
-    0 0 36px -10px color-mix(in srgb, var(--band) 26%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
-.glass > * { position: relative; z-index: 2; }
-
-/* ── Work (λ 700) ─────────────────────────────────────────────── */
-.work-list { display: grid; gap: 18px; }
-
-.work-card { padding: clamp(22px, 3vw, 30px); }
-.work-head {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 6px;
-}
-.work-org {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 116;
-  font-weight: 600;
-  font-size: 1.06rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.work-dates {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  color: var(--band);
-  margin-left: auto;
-  white-space: nowrap;
-}
-.work-role {
-  color: var(--ink-dim);
-  font-size: 0.92rem;
-  margin-bottom: 16px;
-}
-.work-points { display: grid; gap: 9px; }
-.work-points li {
-  position: relative;
-  padding-left: 20px;
-  color: var(--ink-dim);
-  font-size: 0.93rem;
-  line-height: 1.66;
-}
-.work-points li::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0.62em;
-  width: 9px; height: 1.5px;
-  background: var(--band);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--band) 60%, transparent);
-}
-.work-points li strong { color: var(--ink); font-weight: 600; }
-
-/* ── Projects (λ 590) ─────────────────────────────────────────── */
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 18px;
-}
 .project-card {
-  padding: clamp(22px, 3vw, 28px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  padding: clamp(22px, 2.6vw, 30px);
 }
-.project-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -20px 40px -34px rgba(0, 0, 0, 0.9),
+    0 34px 74px -30px rgba(0, 0, 0, 0.95);
+}
+
+.project-figure {
+  margin: calc(clamp(22px, 2.6vw, 30px) * -1) calc(clamp(22px, 2.6vw, 30px) * -1) 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+.project-figure img { width: 100%; height: 100%; object-fit: cover; }
+
+.project-top { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.project-title {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 .project-year {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  color: var(--band);
-}
-.project-title {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 116;
-  font-weight: 620;
-  font-size: 1.12rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  line-height: 1.25;
-}
-.project-blurb {
-  color: var(--ink-dim);
-  font-size: 0.92rem;
-  line-height: 1.66;
-  flex: 1;
-}
-
-/* specimen under glass — the project artifact, framed like a slide */
-.specimen {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background:
-    radial-gradient(85% 95% at 50% 8%, color-mix(in srgb, var(--band) 9%, transparent), transparent 72%),
-    rgba(255, 255, 255, 0.015);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -12px 24px -18px rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.specimen img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.specimen-pending {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: var(--step--1);
   color: var(--ink-faint);
 }
+.project-blurb { flex: 1; font-size: 0.95rem; color: var(--ink-dim); text-wrap: pretty; }
+
 .project-foot {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
 }
-.project-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
+.project-stack { display: flex; flex-wrap: wrap; gap: 6px; }
 .project-stack li {
+  padding: 4px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.025);
   color: var(--ink-faint);
 }
 .project-link {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  transition: color 0.25s ease, gap 0.25s ease;
-}
-.project-link:hover { color: var(--band); gap: 10px; }
-
-/* ── Toolkit strip — broadband ────────────────────────────────── */
-.toolkit {
-  margin-top: 22px;
-  padding: 18px 24px;
-  display: flex;
-  align-items: baseline;
-  gap: 18px;
-  flex-wrap: wrap;
-  border-radius: var(--radius-sm);
-}
-.toolkit:hover { transform: none; }
-.toolkit-label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: var(--band);
   white-space: nowrap;
 }
-.toolkit-items {
+.project-link:hover { text-shadow: 0 0 14px var(--band); }
+
+.toolkit {
+  margin-top: clamp(22px, 3vw, 34px);
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 18px;
-  font-size: 0.85rem;
-  color: var(--ink-dim);
+  align-items: baseline;
+  gap: 12px 26px;
 }
-.toolkit-items span strong { color: var(--ink); font-weight: 600; }
-
-/* ── Leadership (λ 530) ───────────────────────────────────────── */
-.lead-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 18px;
-}
-.lead-card { padding: clamp(22px, 3vw, 28px); }
-.lead-stat {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  font-weight: 680;
-  font-size: 2rem;
-  line-height: 1;
+.toolkit-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--band);
-  text-shadow: 0 0 24px color-mix(in srgb, var(--band) 40%, transparent);
-  margin-bottom: 4px;
+}
+.toolkit-items { display: flex; flex-wrap: wrap; gap: 10px 22px; color: var(--ink-dim); }
+.toolkit-items li { font-size: 0.95rem; }
+.toolkit-items em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-faint);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEADERSHIP — the numbers lead
+   ══════════════════════════════════════════════════════════════ */
+.lead-grid { display: grid; gap: clamp(34px, 5vh, 56px); }
+.lead-entry {
+  display: grid;
+  grid-template-columns: minmax(150px, 210px) 1fr;
+  gap: clamp(22px, 4vw, 48px);
+  padding-top: clamp(30px, 5vh, 44px);
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.lead-stat { display: grid; gap: 4px; align-content: start; }
+.lead-stat-value {
+  font-size: var(--step-4);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  color: var(--band);
+  text-shadow: 0 0 44px color-mix(in srgb, var(--band) 45%, transparent);
 }
 .lead-stat-caption {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
   color: var(--ink-faint);
-  margin-bottom: 16px;
 }
 
-/* ── Education (λ 470) ────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   EDUCATION + AWARDS
+   ══════════════════════════════════════════════════════════════ */
 .edu-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: 18px;
-  align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(30px, 4vw, 58px);
 }
-.edu-card { padding: clamp(22px, 3vw, 30px); }
-.edu-subjects {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 20px;
-  margin-top: 18px;
+.edu-block {
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
 }
+
+.edu-subjects { margin-top: 22px; display: grid; gap: 1px; }
 .edu-subjects li {
-  font-size: 0.88rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
   color: var(--ink-dim);
-  padding-left: 18px;
-  position: relative;
+  font-size: 0.95rem;
 }
-.edu-subjects li::before {
-  content: attr(data-level);
-  position: absolute;
-  left: 0; top: 0.32em;
+.edu-level {
   font-family: var(--font-mono);
   font-size: 0.66rem;
-  color: var(--band);
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: var(--ink-faint);
 }
+.edu-level[data-level='HL'] {
+  color: var(--band);
+  background: color-mix(in srgb, var(--band) 13%, transparent);
+}
+
 .edu-ee-question {
-  color: var(--ink-dim);
-  font-size: 0.92rem;
-  line-height: 1.7;
-  margin-top: 12px;
-  font-style: italic;
-  border-left: 2px solid color-mix(in srgb, var(--band) 45%, transparent);
-  padding-left: 14px;
-}
-.edu-resonance {
-  width: 100%;
-  aspect-ratio: 400 / 148;
-  height: auto;
-  margin-top: 18px;
-  overflow: visible;
-}
-
-/* ── Awards (λ 410) ───────────────────────────────────────────── */
-.award-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 14px;
-}
-.award-card { padding: 20px 22px; }
-.award-year {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  color: var(--band);
-  display: block;
-  margin-bottom: 8px;
-}
-.award-name {
-  font-weight: 600;
+  margin-top: 16px;
   font-size: 0.95rem;
-  line-height: 1.4;
-  margin-bottom: 4px;
-}
-.award-result { color: var(--ink-dim); font-size: 0.85rem; }
-
-/* ══════════════════════════════════════════════════════════════
-   MANIFESTO — recombination: the spectrum converges to white
-   ══════════════════════════════════════════════════════════════ */
-.manifesto { text-align: center; }
-.manifesto .band-label { justify-content: center; }
-.manifesto .band-rule { display: none; }
-
-.manifesto-title {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  font-weight: 680;
-  font-size: clamp(1.7rem, 4vw, 2.7rem);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  line-height: 1.1;
-  margin-bottom: 26px;
-}
-
-.manifesto-body {
-  max-width: 62ch;
-  margin: 0 auto;
-  text-align: left;
   color: var(--ink-dim);
-  display: grid;
-  gap: 18px;
-  font-size: 1.02rem;
-  line-height: 1.8;
+  text-wrap: pretty;
 }
-.manifesto-body strong { color: var(--ink); font-weight: 600; }
+.edu-resonance { width: 100%; margin-top: 24px; }
+
+.resonance-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.5s ease-in-out;
+}
+.resonance-fill, .resonance-peak, .resonance-label {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.9s;
+}
+.resonance.is-revealed .resonance-line { stroke-dashoffset: 0; }
+.resonance.is-revealed .resonance-fill,
+.resonance.is-revealed .resonance-peak,
+.resonance.is-revealed .resonance-label { opacity: 1; }
+.resonance-label { font-family: var(--font-mono); }
+
+/* awards read as an index, not four boxes */
+.award-grid { display: grid; }
+.award-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  align-items: baseline;
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  transition: background 0.3s ease, padding-left 0.3s var(--ease-out);
+}
+.award-row:first-child { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.award-row:hover { padding-left: 10px; background: rgba(255, 255, 255, 0.022); }
+.award-year { font-family: var(--font-mono); font-size: var(--step--1); color: var(--band); }
+.award-name { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.02em; }
+.award-result {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+  text-align: right;
+}
 
 /* ══════════════════════════════════════════════════════════════
-   FOOTER — contact + the quote that named the record
+   ETHOS — recombination, the one place to slow down
+   ══════════════════════════════════════════════════════════════ */
+.manifesto-title {
+  max-width: 20ch;
+  margin: clamp(14px, 2vh, 26px) 0 clamp(30px, 5vh, 50px);
+  font-size: var(--step-3);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.manifesto-body {
+  display: grid;
+  gap: 22px;
+  max-width: 68ch;
+  font-size: var(--step-1);
+  line-height: 1.62;
+  color: var(--ink-dim);
+  text-wrap: pretty;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FOOTER — glass surface #3 of 3
    ══════════════════════════════════════════════════════════════ */
 .site-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 64px clamp(16px, 4vw, 32px) 44px;
   position: relative;
-  background: rgba(255, 255, 255, 0.012);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-/* full-spectrum hairline across the seam */
-.site-footer::before {
-  content: '';
-  position: absolute;
-  top: -1px; left: 12%; right: 12%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--l700), var(--l590), var(--l530), var(--l470), var(--l410), transparent);
-  opacity: 0.35;
-}
-
-.footer-inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
+  padding: clamp(80px, 14vh, 150px) var(--gutter) 56px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.022));
   text-align: center;
 }
+.footer-inner { max-width: 760px; margin: 0 auto; display: grid; justify-items: center; }
 
-/* the CTA the recombined white light points at — display size, not a caption */
 .footer-cta {
-  font-family: var(--font-display);
-  font-variation-settings: 'wdth' 122;
-  font-weight: 700;
-  font-size: clamp(1.9rem, 5vw, 3.2rem);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 1.05;
-  text-shadow: 0 0 38px rgba(255, 255, 255, 0.22);
+  font-size: var(--step-4);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  background: linear-gradient(176deg, #fff 30%, #9a9db8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-
-.footer-contact {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+.footer-contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 34px; }
 
 .footer-quote {
+  margin-top: clamp(50px, 9vh, 84px);
+  max-width: 46ch;
+  font-size: var(--step-0);
   font-style: italic;
-  color: var(--ink-dim);
-  max-width: 42ch;
-  font-size: 0.95rem;
+  color: var(--ink-faint);
+  text-wrap: pretty;
 }
 .footer-quote cite {
   display: block;
-  margin-top: 8px;
-  font-style: normal;
+  margin-top: 10px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+  font-style: normal;
+  letter-spacing: 0.08em;
 }
-
 .footer-copy {
+  margin-top: 46px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.14em;
@@ -1057,21 +958,35 @@ body.lightside .hero-prism-canvas { mix-blend-mode: multiply; filter: invert(1);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   RESPONSIVE
+   BUTTONS
    ══════════════════════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .edu-layout { grid-template-columns: 1fr; }
-  .work-dates { margin-left: 0; width: 100%; }
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.035);
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s var(--ease-out);
 }
-
-@media (max-width: 640px) {
-  .nav-links { display: none; }
-  .nav-burger { display: flex; }
-  .band-name { font-size: 1.2rem; }
-  .band-label { gap: 10px; flex-wrap: wrap; }
-  .edu-subjects { grid-template-columns: 1fr; }
-  .hero { padding-top: 100px; }
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.07);
 }
+.btn--beam {
+  background: #fff;
+  color: var(--void);
+  border-color: #fff;
+  font-weight: 620;
+  box-shadow: 0 0 36px -8px rgba(255, 255, 255, 0.6);
+}
+.btn--beam:hover { background: #fff; box-shadow: 0 0 48px -6px rgba(255, 255, 255, 0.85); }
 
 /* ══════════════════════════════════════════════════════════════
    CURSOR LIGHT — the pointer is a light source
@@ -1082,86 +997,55 @@ body.lightside .hero-prism-canvas { mix-blend-mode: multiply; filter: invert(1);
   left: 0;
   width: 600px;
   height: 600px;
-  z-index: 3;
+  border-radius: 50%;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.075), transparent 62%);
-  mix-blend-mode: screen;
+  z-index: 3;
   opacity: 0;
+  background: radial-gradient(circle, rgba(190, 200, 255, 0.055), transparent 62%);
   transition: opacity 0.6s ease;
+  will-change: transform;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+  .lead-entry { grid-template-columns: 1fr; gap: 18px; }
+  .award-row { grid-template-columns: 3.6rem 1fr; }
+  .award-result { grid-column: 2; text-align: left; }
+  .band-name { font-size: var(--step-2); }
+}
+
+@media (max-width: 560px) {
+  .hero { padding-top: 104px; }
+  .work-head { gap: 6px; }
+  .toolkit { flex-direction: column; align-items: flex-start; }
+}
+
 @media (hover: none) {
   .cursor-light { display: none; }
+  .glass::after { display: none; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   THE OTHER SIDE — triple-click the wordmark: "matter of fact,
-   it's all dark." On the light side, the light draws dark.
-   ══════════════════════════════════════════════════════════════ */
-body.lightside {
-  --void: #f3f3f7;
-  --void-lifted: #ffffff;
-  --ink: #101018;
-  --ink-dim: rgba(18, 18, 40, 0.74);
-  --ink-faint: rgba(18, 18, 40, 0.58);
-  --glass-fill: linear-gradient(160deg, rgba(12, 12, 32, 0.055), rgba(12, 12, 32, 0.012) 45%, rgba(12, 12, 32, 0.03));
-  --glass-edge: rgba(12, 12, 32, 0.14);
-  --glass-edge-lit: rgba(12, 12, 32, 0.3);
-}
-body.lightside .scene-aurora { opacity: 0.55; }
-body.lightside .scene-grid { opacity: 0.22; }
-body.lightside .scene-vignette { display: none; }
-body.lightside .shard {
-  border-color: rgba(12, 12, 32, 0.16);
-  background: linear-gradient(140deg, rgba(12, 12, 32, 0.08), rgba(12, 12, 32, 0.01) 58%, rgba(179, 107, 255, 0.08));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 30px -8px rgba(0, 0, 0, 0.15);
-}
-body.lightside .site-nav {
-  background: rgba(246, 246, 251, 0.55);
-  border-bottom-color: rgba(12, 12, 32, 0.08);
-}
-body.lightside .site-nav--scrolled { background: rgba(246, 246, 251, 0.82); }
-body.lightside .nav-sheet { background: rgba(244, 244, 250, 0.82); }
-body.lightside .hero-title .refracted {
-  background: linear-gradient(176deg, #101018 0%, #26264a 46%, #45356e 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  filter: drop-shadow(0 0 42px rgba(179, 107, 255, 0.25));
-}
-/* on the light side, the beam is dark — it's all dark */
-body.lightside .light-spine path[stroke="#ffffff"] { stroke: #101018; }
-body.lightside .light-spine circle[fill="#ffffff"] { fill: #101018; }
-body.lightside .footer-cta { text-shadow: 0 0 38px rgba(12, 12, 32, 0.18); }
-body.lightside .skip-link { background: #101018; color: #f3f3f7; }
-body.lightside .glass {
-  box-shadow:
-    0 26px 52px -28px rgba(20, 20, 50, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -1px 0 rgba(12, 12, 32, 0.08);
-}
-body.lightside .cursor-light {
-  background: radial-gradient(circle, rgba(20, 20, 60, 0.07), transparent 62%);
-  mix-blend-mode: multiply;
-}
-body.lightside .footer-quote { color: var(--ink); }
-
-/* ══════════════════════════════════════════════════════════════
-   REDUCED MOTION — the experiment holds still
+   REDUCED MOTION — remove motion, keep the composition
    ══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .scene-aurora, .scene-grid, .hero-kicker-dot,
-  .glass::after { animation: none; }
-  .cursor-light { display: none; }
-  /* the busiest moving layers step aside entirely */
-  .scene-shards { display: none; }
-  .btn::before { display: none; }
-  /* the spine holds still, fully lit */
-  .light-spine { mask-image: none; -webkit-mask-image: none; }
-  /* content must never be left hidden when motion is off */
-  .rise { opacity: 1; transform: none; animation: none; }
-  *, *::before, *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
+
+  .reveal-ready [data-reveal] { opacity: 1; transform: none; }
+  .resonance-line { stroke-dashoffset: 0; }
+  .resonance-fill, .resonance-peak, .resonance-label { opacity: 1; }
+  .scene-motes, .cursor-light { display: none; }
+  .spine-ray, .spine-tail { opacity: 1; }
 }

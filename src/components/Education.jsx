@@ -1,6 +1,6 @@
+import Band from './Band';
 import Reveal from './Reveal';
 import ResonanceCurve from './ResonanceCurve';
-import { useGlass } from '../lib/useGlass';
 
 const SUBJECTS = [
   { name: 'Mathematics AA', level: 'HL' },
@@ -18,31 +18,32 @@ const AWARDS = [
   { year: '2021', name: 'CoderDojo Coolest Projects', result: 'Bronze Award' },
 ];
 
+/**
+ * Two wavelengths live in this section — 470 for education, 410 for
+ * awards — so the light engine peels a ray off twice here. Awards are an
+ * index, not four boxes: year, name, result, aligned in columns.
+ */
 export default function Education() {
-  const track = useGlass();
   return (
-    <section className="band" id="education" style={{ '--band': '#5c8aff' }}>
-      <Reveal className="band-label">
-        <span className="band-lambda">λ 470nm</span>
-        <h2 className="band-name">Education</h2>
-        <span className="band-rule" />
-      </Reveal>
-
+    <Band id="education" band="470" lambda="λ 470nm" name="Education">
       <div className="edu-layout">
-        <Reveal as="article" className="glass edu-card" onMouseMove={track}>
+        <Reveal as="article" className="edu-block">
           <div className="work-head">
             <h3 className="work-org">Verita International School</h3>
-            <span className="work-dates">Grad. May '27</span>
+            <span className="work-dates">Grad. May &rsquo;27</span>
           </div>
           <p className="work-role">IB Diploma Programme · Bucharest</p>
           <ul className="edu-subjects">
             {SUBJECTS.map((s) => (
-              <li key={s.name} data-level={s.level}>{s.name}</li>
+              <li key={s.name}>
+                {s.name}
+                <span className="edu-level" data-level={s.level}>{s.level}</span>
+              </li>
             ))}
           </ul>
         </Reveal>
 
-        <Reveal as="article" i={1} className="glass edu-card" onMouseMove={track}>
+        <Reveal as="article" i={1} className="edu-block">
           <div className="work-head">
             <h3 className="work-org">Extended Essay</h3>
             <span className="work-dates">Physics</span>
@@ -57,21 +58,21 @@ export default function Education() {
         </Reveal>
       </div>
 
-      <Reveal className="band-label" i={2} style={{ marginTop: 'clamp(40px, 6vh, 64px)' }}>
-        <span className="band-lambda" style={{ '--band': '#b36bff' }}>λ 410nm</span>
+      <Reveal className="band-label band-label--sub" i={2} style={{ '--band': 'var(--l410)' }}>
+        <span className="band-lambda">λ 410nm</span>
         <h2 className="band-name">Awards</h2>
-        <span className="band-rule" style={{ '--band': '#b36bff' }} />
+        <span className="band-rule" />
       </Reveal>
 
-      <div className="award-grid" style={{ '--band': '#b36bff' }} id="awards">
+      <ul className="award-grid" style={{ '--band': 'var(--l410)' }} id="awards">
         {AWARDS.map((a, i) => (
-          <Reveal key={a.name} as="article" i={i} className="glass award-card" onMouseMove={track}>
+          <Reveal key={a.name} as="li" i={i} className="award-row">
             <span className="award-year">{a.year}</span>
-            <div className="award-name">{a.name}</div>
-            <div className="award-result">{a.result}</div>
+            <span className="award-name">{a.name}</span>
+            <span className="award-result">{a.result}</span>
           </Reveal>
         ))}
-      </div>
-    </section>
+      </ul>
+    </Band>
   );
 }

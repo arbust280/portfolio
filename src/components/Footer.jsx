@@ -1,4 +1,4 @@
-import { Mail, GitBranch, Phone } from 'lucide-react';
+import { Mail, GitBranch, Phone } from './icons';
 import Reveal from './Reveal';
 
 const LINKS = [
@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="site-footer" id="contact">
       <div className="footer-inner">
-        {/* the recombined white line from LightSpine points here */}
+        {/* the recombined white line from LightSpine terminates here */}
         <Reveal as="h2" className="footer-cta">
           Let&rsquo;s build something
         </Reveal>
@@ -19,15 +19,16 @@ export default function Footer() {
         <Reveal className="footer-contact" i={1}>
           {LINKS.map((link) => {
             const Icon = link.Icon;
+            const external = link.href.startsWith('http');
             return (
               <a
                 key={link.label}
                 className="btn"
                 href={link.href}
-                target={link.href.startsWith('http') ? '_blank' : undefined}
-                rel="noreferrer"
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noreferrer' : undefined}
               >
-                <Icon size={15} strokeWidth={1.9} aria-hidden />
+                <Icon size={15} />
                 {link.label}
               </a>
             );

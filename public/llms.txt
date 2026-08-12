@@ -1,0 +1,22 @@
+# dinu
+
+> Interdisciplinary engineer in Bucharest. Physics for intuition, software for
+> delivery — payment systems, protein-folding pipelines, environmental sensing,
+> and the layer where a model has to run on real hardware.
+
+The portfolio is a single page built as one optical experiment: a white beam
+strikes a glass prism at the hero and disperses into five wavelengths, each of
+which runs the page as a section band and recombines at the contact CTA.
+
+## Sections
+
+- [Work](https://arbustdev.vercel.app/#work): Transfer Pricing Services Romania (Stripe payments, Supabase/Sanity/Resend rebuild, open-source BVB stock-market crawler); VIS Romania #5912 iGEM, Head of Dry Lab & Software.
+- [Projects](https://arbustdev.vercel.app/#projects): Urbo (Arduino/ESP32 environmental sensing with Home Assistant); LinkerFlow (protein-linker selection into ColabFold); Eco Dashboard (live CSV waste and recycling data).
+- [Leadership](https://arbustdev.vercel.app/#leadership): President of the Student Council and co-leader of the ECO Team at Verita International School.
+- [Education](https://arbustdev.vercel.app/#education): IB Diploma Programme, Verita International School, Bucharest — graduating May 2027. Extended Essay in Physics on RLC resonance and MRI frequency selectivity.
+- [Ethos](https://arbustdev.vercel.app/#ethos): why engineering — holding both the vision and the means to build it.
+
+## Contact
+
+- Email: dinu.petre.andrei@gmail.com
+- GitHub: https://github.com/arbust280

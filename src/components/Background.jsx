@@ -1,47 +1,48 @@
 /**
- * Ambient scene behind everything: drifting prismatic aurora, a
- * perspective light-grid floor, and slow-rising glass shards. Kept
- * deliberately dark and neutral — the LightSpine carries the color.
+ * The room the light travels through.
  *
- * All motion is CSS so it runs regardless of JS animation timing, and
- * the whole layer is disabled under prefers-reduced-motion (index.css).
+ * Deliberately almost empty. The previous version layered four coloured
+ * aurora blobs behind a blur(34px) — expensive, and worse, it competed
+ * with the spectrum for attention, so the rays never got to be the
+ * brightest thing on screen. A beam only reads as a beam in a dark room.
+ *
+ * What's left: a cold ambient wash, an optical-bench grid, and dust —
+ * you can only see a light beam because there is something in the air
+ * for it to scatter off. All motion is compositor-only transforms.
  */
-const SHARDS = [
-  { l: '8%', d: 0, dur: 26, s: 34, r: -18, o: 0.5 },
-  { l: '39%', d: 12, dur: 29, s: 46, r: 8, o: 0.35 },
-  { l: '71%', d: 15, dur: 24, s: 30, r: 16, o: 0.5 },
-  { l: '94%', d: 7, dur: 30, s: 20, r: 32, o: 0.4 },
+
+const MOTES = [
+  { l: '12%', d: 0, dur: 34, s: 3, o: 0.5 },
+  { l: '28%', d: 9, dur: 41, s: 2, o: 0.35 },
+  { l: '46%', d: 17, dur: 29, s: 4, o: 0.45 },
+  { l: '67%', d: 5, dur: 46, s: 2, o: 0.3 },
+  { l: '81%', d: 22, dur: 33, s: 3, o: 0.5 },
+  { l: '93%', d: 13, dur: 38, s: 2, o: 0.35 },
 ];
 
 export default function Background() {
   return (
     <div className="scene" aria-hidden>
-      {/* prismatic aurora blobs */}
-      <div className="scene-aurora" />
-
-      {/* perspective light-grid floor */}
+      <div className="scene-ambient" />
       <div className="scene-grid" />
 
-      {/* rising glass shards */}
-      <div className="scene-shards">
-        {SHARDS.map((s, i) => (
+      <div className="scene-motes">
+        {MOTES.map((m, i) => (
           <span
             key={i}
-            className="shard"
+            className="mote"
             style={{
-              left: s.l,
-              width: `${s.s}px`,
-              height: `${s.s * 1.4}px`,
-              animationDuration: `${s.dur}s`,
-              animationDelay: `${s.d}s`,
-              opacity: s.o,
-              '--rot': `${s.r}deg`,
+              left: m.l,
+              width: `${m.s}px`,
+              height: `${m.s}px`,
+              opacity: m.o,
+              animationDuration: `${m.dur}s`,
+              animationDelay: `-${m.d}s`,
             }}
           />
         ))}
       </div>
 
-      {/* vignette to seat the content */}
       <div className="scene-vignette" />
     </div>
   );

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arbustdev.vercel.app/sitemap.xml

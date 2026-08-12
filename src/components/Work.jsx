@@ -1,5 +1,5 @@
+import Band from './Band';
 import Reveal from './Reveal';
-import { useGlass } from '../lib/useGlass';
 
 const WORK = [
   {
@@ -19,29 +19,30 @@ const WORK = [
     role: 'Head of Dry Lab & Software · Bucharest',
     dates: "Mar–Oct '25",
     points: [
-      <>Ran <strong>10+ simulation models</strong> (COPASI, HADDOCK, MATLAB, Colab) to stress-test the project's molecular design and lab feasibility.</>,
+      <>Ran <strong>10+ simulation models</strong> (COPASI, HADDOCK, MATLAB, Colab) to stress-test the project&rsquo;s molecular design and lab feasibility.</>,
       <>Built <strong>LinkerFlow</strong>, a tool pairing AI automation with protein visualisation to pick multi-domain linkers and dispatch candidates to ColabFold.</>,
       <>Co-hosted a SynBio automation workshop with researcher Anton Kulaga on driving lab work through <strong>Model Context Protocol</strong> tools.</>,
     ],
   },
 ];
 
+/**
+ * Cardless on purpose. Two roles do not need two boxes — they need room
+ * and a rule between them. Glass is reserved for the sections where a
+ * panel is the interaction.
+ */
 export default function Work() {
-  const track = useGlass();
   return (
-    <section className="band" id="work" style={{ '--band': '#ff5c4d' }}>
-      <Reveal className="band-label">
-        <span className="band-lambda">λ 700nm</span>
-        <h2 className="band-name">Work</h2>
-        <span className="band-rule" />
-      </Reveal>
-      <Reveal className="band-intro" i={1}>
-        Where the ideas actually shipped — with a deadline, a client, and a URL at the end.
-      </Reveal>
-
+    <Band
+      id="work"
+      band="700"
+      lambda="λ 700nm"
+      name="Work"
+      intro="Where the ideas actually shipped — with a deadline, a client, and a URL at the end."
+    >
       <div className="work-list">
         {WORK.map((w, i) => (
-          <Reveal key={w.org} as="article" i={i} className="glass work-card" onMouseMove={track}>
+          <Reveal key={w.org} as="article" i={i} className="work-entry">
             <div className="work-head">
               <h3 className="work-org">{w.org}</h3>
               <span className="work-dates">{w.dates}</span>
@@ -55,6 +56,6 @@ export default function Work() {
           </Reveal>
         ))}
       </div>
-    </section>
+    </Band>
   );
 }

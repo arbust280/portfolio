@@ -1,60 +1,56 @@
-import { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useState } from 'react';
 
-const Prism3D = lazy(() => import('./Prism3D'));
+const Prism = lazy(() => import('./Prism'));
 
+/**
+ * The poster. A beam arrives from the top of the viewport, strikes the
+ * prism, and leaves as five wavelengths that run the rest of the page.
+ *
+ * The prism is loaded lazily; if WebGL is unavailable or the context is
+ * lost, `glFailed` swaps in the CSS prism so the composition never has
+ * a hole in it.
+ */
 export default function Hero() {
-  const [prismOn] = useState(
-    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  );
-  const clicks = useRef({ n: 0, t: 0 });
-
-  /* the dark-side egg: three quick clicks on the wordmark flip the theme */
-  const flip = () => {
-    const now = performance.now();
-    if (now - clicks.current.t > 700) clicks.current.n = 0;
-    clicks.current.t = now;
-    if (++clicks.current.n >= 3) {
-      clicks.current.n = 0;
-      const light = document.body.classList.toggle('lightside');
-      try {
-        localStorage.setItem('aethrex-side', light ? 'light' : 'dark');
-      } catch { /* private mode */ }
-    }
-  };
+  const [glFailed, setGlFailed] = useState(false);
+  const onFail = useCallback(() => setGlFailed(true), []);
 
   return (
     <header className="hero" id="top">
       <div className="hero-inner">
-        <span className="hero-kicker rise" style={{ '--d': '0.1s' }}>
+        <p className="hero-kicker">
           <span className="hero-kicker-dot" aria-hidden />
           dinu · Bucharest · interdisciplinary engineer
-        </span>
+        </p>
 
-        {/* the optical element: a real glass prism over the wordmark.
-            LightSpine's beam strikes .hero-prism; rays exit it. */}
         <div className="hero-prism">
-          {prismOn && (
-            <Suspense fallback={null}>
-              <Prism3D />
+          {glFailed ? (
+            <span className="prism-css" aria-hidden />
+          ) : (
+            <Suspense fallback={<span className="prism-css" aria-hidden />}>
+              <Prism onFail={onFail} />
             </Suspense>
           )}
-          <h1 className="hero-title rise" style={{ '--d': '0.2s' }} onClick={flip}>
-            <span className="refracted">aethrex</span>
-          </h1>
         </div>
 
-        <p className="hero-lede rise" style={{ '--d': '0.34s' }}>
+        <h1 className="hero-title">aethrex</h1>
+
+        <p className="hero-lede">
           I work where the abstract meets the physical — <strong>physics for intuition,
           software for delivery</strong>. Payment systems, protein-folding pipelines,
           environmental sensing, and the messy layer where a model finally has to run on
           real hardware.
         </p>
 
-        <div className="hero-actions rise" style={{ '--d': '0.46s' }}>
-          <a className="btn btn--beam" href="#work">See the work →</a>
+        <div className="hero-actions">
+          <a className="btn btn--beam" href="#work">See the work</a>
           <a className="btn" href="#ethos">Why engineering</a>
         </div>
       </div>
+
+      <span className="hero-scroll" aria-hidden>
+        <span className="hero-scroll-rule" />
+        scroll
+      </span>
     </header>
   );
 }

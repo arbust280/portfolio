@@ -1,27 +1,28 @@
 # dinu
 
 Personal portfolio built as one optical experiment: **the page is the prism**.
-A white beam drops from the top of the viewport and strikes a real-time 3D
-glass prism floating over the wordmark (three.js `MeshTransmissionMaterial`,
-lazy-loaded, tilts with the pointer — tilting re-aims the dispersion); five
-spectral rays exit it and run down the page as a luminous spine. Each section is
-a wavelength band (700 → 410 nm) — its ray peels off, sweeps behind that
-section's glass cards, rejoins the bundle, and at the footer all five recombine
-into one white line pointing at the contact CTA. Heavy liquid-glass surfaces
-throughout — a nod to *The Dark Side of the Moon*.
+A white beam drops from the top of the viewport and strikes a real-time glass
+prism floating over the wordmark; five spectral rays exit it and run down the
+page as a luminous spine. Each section is a wavelength band (700 → 410 nm) — its
+ray peels off, and at the footer all five recombine into one white line pointing
+at the contact CTA. A nod to *The Dark Side of the Moon*.
 
 ## Stack
 
 - **React 19 + Vite** — component-driven, fast HMR
-- **Framer Motion** — entrance reveals, scroll progress
-- **Lucide** — icons
+- **Raw WebGL** — the hero prism is a single hand-written fragment shader
+- **Self-hosted Archivo + IBM Plex Mono** via Fontsource — no third-party font request
 - Design system in `src/index.css` (spectrum tokens, glass panels, wavelength bands)
+
+No animation library, no 3D library, no icon package: entrance and reveal motion
+is CSS driven by one shared `IntersectionObserver`, and the four icons in use are
+inlined as SVG.
 
 ## Structure
 
 | Section | Band | Component |
 |---|---|---|
-| Hero (dispersion) | white | `Hero` + `Prism3D` — real refractive glass |
+| Hero (dispersion) | white | `Hero` + `Prism` — WebGL refraction |
 | Work | λ 700 nm | `Work` |
 | Projects | λ 590 nm | `Projects` |
 | Leadership | λ 530 nm | `Leadership` |
@@ -40,11 +41,27 @@ npm run preview  # preview the build
 
 ## Notes
 
-- `LightSpine` measures the live DOM (wordmark, card grids, footer CTA) and
-  redraws on resize; ray reveal follows scroll via a CSS mask (`--lit`).
-- The Extended Essay card renders an actual RLC resonance curve (the essay's subject).
-- Glass panels track the cursor for a specular highlight (`src/lib/useGlass.js`).
-- The cursor is a light source (`CursorLight`) — a soft glow sweeps the glass.
-- There is another side. Try clicking the wordmark three times, quickly.
-- Fully responsive; `prefers-reduced-motion` is respected (all entrances resolve
-  to their end state, the busiest layers — including the 3D prism — switch off).
+- **The prism** (`src/lib/prism-gl.js`) traces a ray through a triangular prism
+  with a wavelength-dependent index of refraction, tinting each of 14 spectral
+  samples with the same five band colours the page uses — so the spectrum leaving
+  the prism is the spectrum running down the page. Geometry is an analytic
+  convex-polyhedron intersection, not a raymarch. Falls back to a CSS prism when
+  WebGL is unavailable or the context is lost, and renders a single still frame
+  under `prefers-reduced-motion`.
+- **`LightSpine`** measures the live DOM (prism, section grids, footer CTA) and
+  redraws only when the document changes — never on scroll or pointer move.
+  Pointer tilt is a compositor-only transform; each ray ignites via
+  `IntersectionObserver` when its own section arrives. Rays only sweep *behind*
+  sections that have glass panels to refract them (`sweep: 'glass'`); cardless
+  sections get a bow in the margin, because a ray crossing bare body copy reads
+  as a scratch.
+- **Glass is deliberately scarce** — three surfaces (nav, project cards, footer).
+  Everything else is type on void, which is both cheaper and what makes the glass
+  read as glass.
+- The Extended Essay block renders an actual RLC resonance curve (the essay's
+  subject), drawn on scroll with a normalised `pathLength`.
+- `prefers-reduced-motion` is respected throughout; content is never hidden
+  behind JS — the reveal's hidden state is scoped to a class set only when
+  `IntersectionObserver` exists.
+- Project repo links render only when a real URL exists, so no "Code" affordance
+  ever dead-ends on a bare profile. Add `repo`/`image` in `src/components/Projects.jsx`.

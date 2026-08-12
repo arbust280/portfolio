@@ -1,14 +1,20 @@
+import Band from './Band';
 import Reveal from './Reveal';
 
+/**
+ * Recombination — the five wavelengths become white light again, so the
+ * section takes no band colour of its own. Set as a single measure of
+ * running text: this is the one place on the page to slow down.
+ */
 export default function Manifesto() {
   return (
-    <section className="band manifesto" id="ethos" style={{ '--band': '#e8e8f2' }}>
-      <Reveal className="band-label">
-        <span className="band-lambda">recombination</span>
-        <h2 className="band-name">Ethos</h2>
-        <span className="band-rule" />
-      </Reveal>
-
+    <Band
+      id="ethos"
+      band="white"
+      lambda="recombination"
+      name="Ethos"
+      className="manifesto"
+    >
       <Reveal as="p" i={1} className="manifesto-title">
         Engineering is the discipline that translates
       </Reveal>
@@ -23,18 +29,18 @@ export default function Manifesto() {
         </Reveal>
         <Reveal as="p" i={3}>
           Working on LinkerFlow made it concrete. Even the most powerful model still depends on
-          physical infrastructure and human-built interfaces to reach anyone. A model can't
+          physical infrastructure and human-built interfaces to reach anyone. A model can&rsquo;t
           conceive an original need, design the thing that meets it, and ship it — a person
-          must. That's why I don't want to only study computer science, or only physics.
+          must. That&rsquo;s why I don&rsquo;t want to only study computer science, or only physics.
           <strong> I want to hold both the vision and the means to build it.</strong>
         </Reveal>
         <Reveal as="p" i={4}>
-          The rest I learned by leading: aligning people who don't agree, deciding with too
+          The rest I learned by leading: aligning people who don&rsquo;t agree, deciding with too
           little information and too little time, and shipping on Fridays anyway. Domain
           knowledge earns trust; how you communicate moves everyone forward. I like building,
-          breaking, learning, and rebuilding — I'm here to get better at all four.
+          breaking, learning, and rebuilding — I&rsquo;m here to get better at all four.
         </Reveal>
       </div>
-    </section>
+    </Band>
   );
 }

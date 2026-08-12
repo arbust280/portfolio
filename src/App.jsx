@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { MotionConfig } from 'framer-motion';
 import './index.css';
 import Background from './components/Background';
 import CursorLight from './components/CursorLight';
@@ -14,16 +12,8 @@ import Manifesto from './components/Manifesto';
 import Footer from './components/Footer';
 
 export default function App() {
-  useEffect(() => {
-    try {
-      if (localStorage.getItem('aethrex-side') === 'light') {
-        document.body.classList.add('lightside');
-      }
-    } catch { /* private mode */ }
-  }, []);
-
   return (
-    <MotionConfig reducedMotion="user">
+    <>
       <a className="skip-link" href="#work">Skip to content</a>
       <Background />
       <CursorLight />
@@ -38,6 +28,6 @@ export default function App() {
         <Manifesto />
       </main>
       <Footer />
-    </MotionConfig>
+    </>
   );
 }

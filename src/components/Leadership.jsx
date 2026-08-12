@@ -1,5 +1,5 @@
+import Band from './Band';
 import Reveal from './Reveal';
-import { useGlass } from '../lib/useGlass';
 
 const ROLES = [
   {
@@ -24,34 +24,38 @@ const ROLES = [
   },
 ];
 
+/**
+ * The numbers are the point here, so they lead at display scale and the
+ * prose hangs off them. No panels — a figure does not need a box.
+ */
 export default function Leadership() {
-  const track = useGlass();
   return (
-    <section className="band" id="leadership" style={{ '--band': '#5cff8f' }}>
-      <Reveal className="band-label">
-        <span className="band-lambda">λ 530nm</span>
-        <h2 className="band-name">Leadership</h2>
-        <span className="band-rule" />
-      </Reveal>
-      <Reveal className="band-intro" i={1}>
-        The hardest problems are rarely technical. Two roles where the job was aligning people, not code.
-      </Reveal>
-
+    <Band
+      id="leadership"
+      band="530"
+      lambda="λ 530nm"
+      name="Leadership"
+      intro="The hardest problems are rarely technical. Two roles where the job was aligning people, not code."
+    >
       <div className="lead-grid">
         {ROLES.map((r, i) => (
-          <Reveal key={r.org} as="article" i={i} className="glass lead-card" onMouseMove={track}>
-            <div className="lead-stat">{r.stat}</div>
-            <div className="lead-stat-caption">{r.caption}</div>
-            <h3 className="work-org">{r.org}</h3>
-            <p className="work-role">{r.role}</p>
-            <ul className="work-points">
-              {r.points.map((p, j) => (
-                <li key={j}>{p}</li>
-              ))}
-            </ul>
+          <Reveal key={r.org} as="article" i={i} className="lead-entry">
+            <p className="lead-stat">
+              <span className="lead-stat-value">{r.stat}</span>
+              <span className="lead-stat-caption">{r.caption}</span>
+            </p>
+            <div className="lead-body">
+              <h3 className="work-org">{r.org}</h3>
+              <p className="work-role">{r.role}</p>
+              <ul className="work-points">
+                {r.points.map((p, j) => (
+                  <li key={j}>{p}</li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
         ))}
       </div>
-    </section>
+    </Band>
   );
 }
