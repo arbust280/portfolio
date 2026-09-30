@@ -1,6 +1,7 @@
 import Band from './Band';
 import Reveal from './Reveal';
 import ResonanceCurve from './ResonanceCurve';
+import { ArrowUpRight } from './icons';
 
 const SUBJECTS = [
   { name: 'Mathematics AA', level: 'HL' },
@@ -41,6 +42,9 @@ export default function Education() {
               </li>
             ))}
           </ul>
+          <a className="project-link edu-cas" href="https://dinu-cas.vercel.app/" target="_blank" rel="noreferrer">
+            CAS portfolio <ArrowUpRight size={14} stroke={2.2} />
+          </a>
         </Reveal>
 
         <Reveal as="article" i={1} className="edu-block">

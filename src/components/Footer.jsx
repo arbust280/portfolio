@@ -1,10 +1,11 @@
-import { Mail, GitBranch, Phone } from './icons';
+import { Mail, GitBranch, Phone, ArrowUpRight } from './icons';
 import Reveal from './Reveal';
 
 const LINKS = [
   { href: 'mailto:dinu.petre.andrei@gmail.com', label: 'Email', Icon: Mail },
   { href: 'https://github.com/arbust280', label: 'GitHub', Icon: GitBranch },
   { href: 'tel:+40752572760', label: 'Call', Icon: Phone },
+  { href: 'https://dinu-cas.vercel.app/', label: 'CAS portfolio', Icon: ArrowUpRight },
 ];
 
 export default function Footer() {

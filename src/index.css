@@ -818,6 +818,7 @@ body::after {
 }
 
 .edu-subjects { margin-top: 22px; display: grid; gap: 1px; }
+.edu-cas { margin-top: 18px; }
 .edu-subjects li {
   display: flex;
   align-items: baseline;
